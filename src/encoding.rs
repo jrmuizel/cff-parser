@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use super::charset::Charset;
 use super::StringId;
 use crate::parser::{FromData, LazyArray16, Stream};
@@ -147,7 +149,13 @@ impl Encoding<'_> {
     pub fn get_table(&self) -> Vec<u8> {
         match self.kind {
             EncodingKind::Standard => STANDARD_ENCODING.to_vec(),
-            EncodingKind::Expert => panic!(),
+            EncodingKind::Expert => {
+                std::io::stderr()
+                    .write_all(b"PDF 'Expert encoding' is not standardized and not supported. Consider using optical character recognition (OCR")
+                    .unwrap();
+
+                vec![]
+            }
             EncodingKind::Format0(ref encoding) => encoding.clone().into_iter().collect(),
             EncodingKind::Format1(ref table) => {
                 let mut encoding = Vec::new();
@@ -187,4 +195,15 @@ pub(crate) fn parse_encoding<'a>(s: &mut Stream<'a>) -> Option<Encoding<'a>> {
     };
 
     Some(Encoding { kind, supplemental })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn expert_encoding_returns_empty_vec() {
+        let encoding = Encoding::new_expert();
+        assert!(encoding.get_table().is_empty());
+    }
 }
