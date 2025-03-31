@@ -11,12 +11,9 @@ fn main() {
     reader.read_to_end(&mut buffer).expect("could not read file");
     let table = Table::parse(&buffer).unwrap();
 
-    let charset = table.charset.get_table();
-    let encoding = table.encoding.get_table();
-    for i in 0..encoding.len() {
-        let cid = encoding[i];
-        let sid = charset[i];
-        println!("{}: {:?}", cid, string_by_id(&table, sid));
+    let encoding = table.encoding.get_code_to_sid_table(&table.charset);
+    for (cid, sid) in encoding.iter() {
+        println!("{}: {:?}", cid, string_by_id(&table, *sid));
     }
 
 }

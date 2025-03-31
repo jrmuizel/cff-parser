@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+use std::result;
+use std::str::Chars;
+
 use super::charset::Charset;
 use super::StringId;
 use crate::parser::{FromData, LazyArray16, Stream};
@@ -166,11 +170,35 @@ impl Encoding<'_> {
         }
     }
 
-    pub fn get_table(&self) -> Vec<u8> {
+    pub fn get_code_to_sid_table(&self, charset: &Charset) -> HashMap<u8, StringId> {
         match self.kind {
-            EncodingKind::Standard => STANDARD_ENCODING.to_vec(),
-            EncodingKind::Expert => panic!(),
-            EncodingKind::Format0(ref encoding) => encoding.clone().into_iter().collect(),
+            EncodingKind::Standard => {
+                let mut result = HashMap::new();
+                for i in 0..255 {
+                    result.insert(i as u8, StringId(STANDARD_ENCODING[i] as u16));
+                }
+                result
+            },
+            EncodingKind::Expert => {
+                let mut result = HashMap::new();
+                let charset = charset.get_table();
+
+                for i in 0..255 {
+                    result.insert(i as u8, StringId(EXPERT_ENCODING[i] as u16));
+                }
+                result
+            },
+            EncodingKind::Format0(ref encoding) => {
+                let enc: Vec<_> = encoding.clone().into_iter().collect();
+                let charset = charset.get_table();
+                let mut result = HashMap::new();
+                for i in 0..enc.len() {
+                    let cid = enc[i];
+                    let sid = charset[i];
+                    result.insert(cid, sid);
+                }
+                result
+            }
             EncodingKind::Format1(ref table) => {
                 let mut encoding = Vec::new();
                 for range in table.clone() {
@@ -178,7 +206,15 @@ impl Encoding<'_> {
                         encoding.push(code);
                     }
                 }
-                encoding
+                let enc = encoding;
+                let charset = charset.get_table();
+                let mut result = HashMap::new();
+                for i in 0..enc.len() {
+                    let cid = enc[i];
+                    let sid = charset[i];
+                    result.insert(cid, sid);
+                }
+                result
             }
         }
     }
