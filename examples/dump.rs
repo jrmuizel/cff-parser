@@ -12,10 +12,10 @@ fn main() {
     reader.read_to_end(&mut buffer).expect("could not read file");
     let table = Table::parse(&buffer).unwrap();
     dbg!(&table);
-    println!("full name: {:?}", table.full_name().and_then(|s| string_by_id(&table, s)));
-    println!("family name: {:?}", table.family_name().and_then(|s| string_by_id(&table, s)));
-    println!("version: {:?}", table.version().and_then(|s| string_by_id(&table, s)));
-    println!("notice: {:?}", table.notice().and_then(|s| string_by_id(&table, s)));
+    println!("full name: {:?}", table.full_name());
+    println!("family name: {:?}", table.family_name());
+    println!("version: {:?}", table.version());
+    println!("notice: {:?}", table.notice());
     println!("number of glyphs: {:?}", table.number_of_glyphs());
 
     println!("charset:");

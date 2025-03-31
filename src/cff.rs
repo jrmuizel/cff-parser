@@ -1091,20 +1091,20 @@ impl<'a> Table<'a> {
         }
     }
 
-    pub fn version(&self) -> Option<StringId> {
-        self.version
+    pub fn version(&self) -> Option<&str> {
+        self.version.and_then(|sid| string_by_id(&self, sid))
     }
 
-    pub fn notice(&self) -> Option<StringId> {
-        self.notice
+    pub fn notice(&self) -> Option<&str> {
+        self.notice.and_then(|sid| string_by_id(&self, sid))
     }
 
-    pub fn full_name(&self) -> Option<StringId> {
-        self.full_name
+    pub fn full_name(&self) -> Option<&str> {
+        self.full_name.and_then(|sid| string_by_id(&self, sid))
     }
 
-    pub fn family_name(&self) -> Option<StringId> {
-        self.family_name
+    pub fn family_name(&self) -> Option<&str> {
+        self.family_name.and_then(|sid| string_by_id(&self, sid))
     }
 }
 
