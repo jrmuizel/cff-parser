@@ -14,7 +14,7 @@ pub use encoding::{Encoding, EncodingKind, Format1Range, STANDARD_ENCODING};
 
 /// A type-safe wrapper for string ID.
 #[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
-pub struct StringId(u16);
+pub struct StringId(pub u16);
 
 impl FromData for StringId {
     const SIZE: usize = 2;

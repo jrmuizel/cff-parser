@@ -137,7 +137,7 @@ impl Charset<'_> {
                 let mut vec = Vec::new();
                 for range in *array {
                     vec.push(range.first);
-                    vec.extend((range.first.0 + 1..=u16::from(range.left)).map(StringId));
+                    vec.extend((range.first.0 + 1..=range.first.0 + (range.left as u16)).map(StringId));
                 }
                 vec
             }
@@ -145,7 +145,7 @@ impl Charset<'_> {
                 let mut vec = Vec::new();
                 for range in *array {
                     vec.push(range.first);
-                    vec.extend((range.first.0 + 1..=u16::from(range.left)).map(StringId));
+                    vec.extend((range.first.0 + 1..=range.first.0 + range.left).map(StringId));
                 }
                 vec
             }

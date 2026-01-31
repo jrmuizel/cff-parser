@@ -1,6 +1,6 @@
 use std::io::Read;
 
-use cff_parser::{Table, string_by_id};
+use cff_parser::{StringId, Table, string_by_id};
 use cff_parser::charset::Charset;
 
 fn main() {
@@ -34,14 +34,22 @@ fn main() {
             println!("Format1:");
             for range in array.clone() {
                 let sid = range.first;
-                println!("  {:?}", string_by_id(&table, sid));
+                let count = range.left;
+                println!("  {:?} {:?}", sid, count);
+                for i in 0..=count {
+                    println!("    {:?}", string_by_id(&table, StringId(sid.0 + u16::from(i))));
+                }
             }
         }
         Charset::Format2(ref array) => {
             println!("Format2:");
             for range in array.clone() {
                 let sid = range.first;
-                println!("  {:?}", string_by_id(&table, sid));
+                let count = range.left;
+                println!("  {:?} {:?}", sid, count);
+                for i in 0..=count {
+                    println!("    {:?}", string_by_id(&table, StringId(sid.0 + i)));
+                }
             }
         }
     }
