@@ -1,6 +1,6 @@
 [package]
 name = "cff-parser"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Evgeniy Reizner <razrfalcon@gmail.com>", "Jeff Muizelaar <jrmuizel@gmail.com>"]
 keywords = ["cff", "font", "adobe"]
 categories = ["parser-implementations"]
